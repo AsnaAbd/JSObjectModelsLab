@@ -36,49 +36,22 @@
     test('Test SpeedCheckFR', function() {
             var speed0 = createSpeedCheckFR();
             equal(speed0.speed, 0, "vitesse de base 0");
-            //initialisationnde vitesse
             speed0.speed = 50;
             equal(speed0.speed, 50, "changement de vitesse 50");
             throws(function(){
-            speed0.speed = -10; }, "vitesse invalide parceque negative");
+            speed0.speed = -50; }, "SHOULD throw a SpeedCheckError, vitesse invalide car negative");
             equal(speed0.infraction, false, "pas d 'infraction (50km/h)");
             speed0.speed = 140;
             equal(speed0.infraction, true, "vitesse(140km/h) superieur a 130 km/h ==>infraction");
-          //  equal(speed0.licencePlate, "???", "plaque d'immatriculation inconnue");
+            equal(speed0.licencePlate, "???", "plaque d'immatriculation inconnue");
             speed0.licencePlate = "LH-506-ME";
-            equal(speed0.licencePlate, "LH-506-ME", "verification de changement de plaque");
-            speed0.licencePlate = "F3-RC-5276";
-            equal(speed0.licencePlate, 'SpeedCheckError', 'Plaque non reconnue');
-            equal(speed0.licencePlate, "F3-RC-5276", " Plaque non reconnue. Vous avez de la chance.");
+            equal(speed0.licencePlate, "LH-506-KL", "verification de changement de plaque");
             throws(function() { speed0.licencePlate = "NOTAPLAQUE"; }, "should throw an SpeedCheckError because invalid licencePlate");
-            speed0.licencePlate = "LH-506-ME";
-            equal(speed0.licencePlate, "LH-506-ME", "Plaque reconnue");
-
+            equal(speed0.licencePlate, "LH-506-ME", "should be the last correct licence plate");
         });
 
     // TODO: Vérifier que TOUTES les fonctionnalités de createSpeedCheckBE sont correctes (effects de bords, valeurs négatives, etc.) pour tous les attributs (speed et licencePlate)
-    test('Test SpeedCheckBE', function() {
-            var speed0 = createSpeedCheckBE();
-            equal(speed0.speed, 0, "vitesse de base 0");
-            //initialisationnde vitesse
-            speed0.speed = 50;
-            equal(speed0.speed, 50, "changement de vitesse 50");
-            throws(function(){
-            speed0.speed = -10; }, " vitesse invalide parceque negative");
-            equal(speed0.infraction, false, "pas d 'infraction (50km/h)");
-            speed0.speed = 125;
-            equal(speed0.infraction, true, "vitesse(125km/h) superieur a 120 km/h ==>infraction");
-          //  equal(speed0.licencePlate, "???", "plaque d'immatriculation inconnue");
-            speed0.licencePlate = "506-MME";
-            equal(speed0.licencePlate, "506-MME", "verification de changement de plaque");
-            speed0.licencePlate = "RC-5276";
-            equal(speed0.licencePlate, 'SpeedCheckError', 'Plaque non reconnue');
-            equal(speed0.licencePlate, "RC-5276", " Plaque non reconnue. Vous avez de la chance.");
-            throws(function() { speed0.licencePlate = "NOTAPLAQUE"; }, "pas de plaque ==>SpeedCheckError");
-            speed0.licencePlate = "LHJ-506";
-            equal(speed0.licencePlate, "LH-506-ME", "Plaque reconnue");
 
-        });
 
     // TODO: Vérifier que la fonction toString() fonctionne bien.
     //  - chaine de caractère attentue pour une infracion (e.g. licencePlate === 'WD366MD' et  speed === 135):
@@ -86,18 +59,7 @@
     //  - chaine de caractère attendue pour sans infraction (e.g. licencePlate === 'WD366MD' et  speed === 105):
     //      "Véhicule WD366MD roule à 105 km/h. Ça va, circulez..."
 
-    test('Test de la fonction toString', function() {
-      var speed0 = createSpeedCheckFR();
-      var speed1 = createSpeedCheckBE();
-      speed0.speed = 105;
-      equal(speed0.infraction , false, 'Vitesse = '+ speed0.speed +' : Pas d\'infraction');
-      speed1.speed = 135;
-      equal(speed1.infraction , true, 'Vitesse = '+ speed1.speed +' : Infraction !!!');
-       speed0.licencePlate = 'WD366MD'
-       equal(speed0.toString(), 'Véhicule WD366MD roule à 105 km/h. Ça va, circulez...', 'Pas d\'infraction');
-       speed1.licencePlate = '8-DFE-993';
-       equal(speed1.toString(), 'Véhicule 8-DFE-993 roule à 135 km/h. Infraction!', 'Infraction');
-     });
+
 
 
     /*---------------------------------*/
@@ -176,7 +138,7 @@
     });
 
     test('Test proper hidding of properties', function() {
-      expect(5);
+      expect(4);
       var shape0 = window.Shapes.createShape(roadAttr);
       var prop;
       var props = [];
@@ -236,7 +198,7 @@
     });
 
     test('Test objects created with the  createBuilding function', function() {
-      expect(2);
+      expect(3);
       var building = window.Shapes.createBuilding(buildingAttr);
       ok(typeof building.getArea === 'function', 'Object Created with "createBuilding" Should have a getArea function');
       equal(building.getArea(),10000, 'Should return the area of the building computed from the set of points in the nodes attributes');
@@ -263,10 +225,7 @@
     /*-----------------------------------*/
 
     // TODO Write the whole test module for testing with the app/data/eure.json file.
-    var obj;
-    var objets;
-    var autres;
-    var objetShapes = {buildings:[], roads:[], amenities:[], naturals:[]};
+
     module('Asynchronous Unit Test Module', {
         setup: function() {
             stop();
@@ -282,52 +241,17 @@
             //     obj = {a:'OK', b:'KO'};
             //     start();
             // }, 1000);
-            $.get('data/eure.json').success(function(data){
-              objets = data;
-              autres = 0;
-              objetShapes = {buildings:[], roads:[], amenities:[], naturals:[]};
-              for (var i = 0; i < objets.length; i++){
-                if (objets[i].hasOwnProperty("building") && objets[i].building === true) {
-                  objetShapes.buildings.push(window.Shapes.createBuilding(objets[i]));
-                }
-                else if (objets[i].hasOwnProperty("amenity")){
-                  objetShapes.amenities.push(window.Shapes.createAmenity(objets[i]));
-                }
-                else if (objets[i].hasOwnProperty("highway")) {
-                  objetShapes.roads.push(window.Shapes.createRoad(objets[i]));
-                }
-                else if (objets[i].hasOwnProperty("natural")) {
-                  objetShapes.naturals.push(window.Shapes.createNatural(objets[i]));
-                }
-                else
-                  autres++;
-
-              }
-            //  start();
-           });
 
         }
     });
-    test('test nombre d\'objets', function(){
-         expect(2);
-        ok(objets.length !== 0, 'Longueur non nulle');
-          var result = objetShapes.buildings.length + objetShapes.amenities.length + objetShapes.roads.length + objetShapes.naturals.length + autres;
-          equal(objets.length, result, 'nombre objets');
-        });
 
-        test('test surface des buildings', function(){
-          expect(1);
-          var res = objetShapes.buildings[0].getArea();
-          for (var i=1 ; i < objetShapes.buildings.length ; i++) {
-            res += objetShapes.buildings[i].getArea();
-          }
-          ok(res !== 0, 'Somme surfaces non nulle');
-        });
+    test('test 1', function() {
+        equal(obj.a, 'OK', 'Message');
+        equal(obj.a+'KO', 'OKKO', 'Message');
+    });
 
-        test('test 1', function() {
-            equal(obj.a, 'OK', 'Message');
-            equal(obj.a+'KO', 'OKKO', 'Message');
-        });
-
+    test('test 2', function() {
+        equal(obj.a+obj.b, 'OKKO', 'FAil');
+    });
 
 }());
