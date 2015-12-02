@@ -35,50 +35,40 @@
     // TODO: Vérifier que TOUTES les fonctionnalités de createSpeedCheckFR sont correctes (effects de bords, valeurs négatives, etc.) pour tous les attributs (speed et licencePlate)
     test('Test SpeedCheckFR', function() {
             var speed0 = createSpeedCheckFR();
-            equal(speed0.speed, 0, "vitesse de base 0");
-            //initialisationnde vitesse
-            speed0.speed = 50;
-            equal(speed0.speed, 50, "changement de vitesse 50");
-            throws(function(){
-            speed0.speed = -10; }, "vitesse invalide parceque negative");
-            equal(speed0.infraction, false, "pas d 'infraction (50km/h)");
-            speed0.speed = 140;
-            equal(speed0.infraction, true, "vitesse(140km/h) superieur a 130 km/h ==>infraction");
-          //  equal(speed0.licencePlate, "???", "plaque d'immatriculation inconnue");
-            speed0.licencePlate = "LH-506-ME";
-            equal(speed0.licencePlate, "LH-506-ME", "verification de changement de plaque");
-            speed0.licencePlate = "F3-RC-5276";
-            equal(speed0.licencePlate, 'SpeedCheckError', 'Plaque non reconnue');
-            equal(speed0.licencePlate, "F3-RC-5276", " Plaque non reconnue. Vous avez de la chance.");
-            throws(function() { speed0.licencePlate = "NOTAPLAQUE"; }, "should throw an SpeedCheckError because invalid licencePlate");
-            speed0.licencePlate = "LH-506-ME";
-            equal(speed0.licencePlate, "LH-506-ME", "Plaque reconnue");
-
-        });
-
-    // TODO: Vérifier que TOUTES les fonctionnalités de createSpeedCheckBE sont correctes (effects de bords, valeurs négatives, etc.) pour tous les attributs (speed et licencePlate)
-    test('Test SpeedCheckBE', function() {
             var speed0 = createSpeedCheckBE();
             equal(speed0.speed, 0, "vitesse de base 0");
-            //initialisationnde vitesse
-            speed0.speed = 50;
-            equal(speed0.speed, 50, "changement de vitesse 50");
-            throws(function(){
-            speed0.speed = -10; }, " vitesse invalide parceque negative");
+            speed0.speed = 90;
+            equal(speed0.speed, 90, "changement de vitesse 50");
+            throws(function() { speed0.speed = -90; }, "SHOULD throw a SpeedCheckError");
+            equal(speed0.speed, 90, "verification de changement de vitesse");
             equal(speed0.infraction, false, "pas d 'infraction (50km/h)");
             speed0.speed = 125;
             equal(speed0.infraction, true, "vitesse(125km/h) superieur a 120 km/h ==>infraction");
-          //  equal(speed0.licencePlate, "???", "plaque d'immatriculation inconnue");
-            speed0.licencePlate = "506-MME";
-            equal(speed0.licencePlate, "506-MME", "verification de changement de plaque");
-            speed0.licencePlate = "RC-5276";
-            equal(speed0.licencePlate, 'SpeedCheckError', 'Plaque non reconnue');
-            equal(speed0.licencePlate, "RC-5276", " Plaque non reconnue. Vous avez de la chance.");
-            throws(function() { speed0.licencePlate = "NOTAPLAQUE"; }, "pas de plaque ==>SpeedCheckError");
-            speed0.licencePlate = "LHJ-506";
-            equal(speed0.licencePlate, "LH-506-ME", "Plaque reconnue");
-
+            equal(speed0.licencePlate, "???", "Plaque non reconnue");
+            speed0.licencePlate = "1-ABC-234";
+            equal(speed0.licencePlate, "1-ABC-234", "Plaque non reconnue. Vous avez de la chance.");
+            throws(function() { speed0.licencePlate = "NOTAPLAQUE"; }, "should throw an SpeedCheckError, plaque invalide");
+            equal(speed0.licencePlate, "1-ABC-234", "verification de changement de plaque");
         });
+
+    // TODO: Vérifier que TOUTES les fonctionnalités de createSpeedCheckBE sont correctes (effects de bords, valeurs négatives, etc.) pour tous les attributs (speed et licencePlate)
+   test('Test SpeedCheckBE', function() {
+
+            var speed0 = createSpeedCheckBE();
+            equal(speed0.speed, 0, "vitesse de base 0");
+            speed0.speed = 90;
+            equal(speed0.speed, 90, "changement de vitesse 50");
+            throws(function() { speed0.speed = -90; }, "SHOULD throw a SpeedCheckError");
+            equal(speed0.speed, 90, "verification de changement de vitesse");
+            equal(speed0.infraction, false, "pas d 'infraction (50km/h)");
+            speed0.speed = 125;
+            equal(speed0.infraction, true, "vitesse(125km/h) superieur a 120 km/h ==>infraction");
+            equal(speed0.licencePlate, "???", "Plaque non reconnue");
+            speed0.licencePlate = "1-ABC-234";
+            equal(speed0.licencePlate, "1-ABC-234", "Plaque non reconnue. Vous avez de la chance.");
+            throws(function() { speed0.licencePlate = "NOTAPLAQUE"; }, "should throw an SpeedCheckError, plaque invalide");
+            equal(speed0.licencePlate, "1-ABC-234", "verification de changement de plaque");
+});
 
     // TODO: Vérifier que la fonction toString() fonctionne bien.
     //  - chaine de caractère attentue pour une infracion (e.g. licencePlate === 'WD366MD' et  speed === 135):
@@ -93,10 +83,10 @@
       equal(speed0.infraction , false, 'Vitesse = '+ speed0.speed +' : Pas d\'infraction');
       speed1.speed = 135;
       equal(speed1.infraction , true, 'Vitesse = '+ speed1.speed +' : Infraction !!!');
-       speed0.licencePlate = 'WD366MD'
-       equal(speed0.toString(), 'Véhicule WD366MD roule à 105 km/h. Ça va, circulez...', 'Pas d\'infraction');
-       speed1.licencePlate = '8-DFE-993';
-       equal(speed1.toString(), 'Véhicule 8-DFE-993 roule à 135 km/h. Infraction!', 'Infraction');
+       speed0.licencePlate = 'WD-366-MD'
+       equal(speed0.toString(), 'Véhicule WD-366-MD roule à 105 km/h. Ça va, circulez...', 'Pas d\'infraction');
+       speed1.licencePlate = '8-CRE-123';
+       equal(speed1.toString(), 'Véhicule 8-CRE-123 roule à 135 km/h. Infraction!', 'Infraction');
      });
 
 

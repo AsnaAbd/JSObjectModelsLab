@@ -39,7 +39,7 @@
           },
           toString: {
               /* TODO: Implement this function */
-		value: function(){
+		            get: function(){
                 if (this._infraction) {
                   return 'Véhicule '+this.licencePlate +' roule à '+this.speed +' km/h. Infraction!';
               } else {
@@ -101,4 +101,3 @@
 
 
 }(this));
-
